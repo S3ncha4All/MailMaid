@@ -1,7 +1,7 @@
 # MailMaid
 A CLI Tool for http-Requests
 
-# Usage
+# Future Usage
 
 mm history list
 
