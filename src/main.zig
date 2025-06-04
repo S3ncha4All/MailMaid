@@ -1,12 +1,22 @@
 const std = @import("std");
-const mailmaid = @import("mailmaid.zig");
+const parser = @import("argument_parser.zig");
+const commands = @import("command_parser.zig");
+const client = @import("client.zig");
 
 pub fn main() !void {
     std.debug.print("Run MailMaid\n", .{});
 
-    const allocator = std.heap.page_allocator;
+    var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
+    defer arena.deinit();
+    const allocator = arena.allocator();
     const args = try std.process.argsAlloc(allocator);
-    defer allocator.free(args);
 
-    mailmaid.run(args[1..]);
+    const cli_command = try parser.parse_commandline(allocator, args[1..]);
+    const command = commands.parse_cli_command(allocator, cli_command);
+    switch (command) {
+        .Request => |request| {
+            client.make_request(allocator, request);
+        },
+        .Help => std.debug.print("HELP\n", .{}),
+    }
 }
