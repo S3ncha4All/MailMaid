@@ -2,10 +2,8 @@ const std = @import("std");
 const ArrayList = std.ArrayList;
 const CliCommand = @import("argument_parser.zig").CliCmd;
 
-pub const RequestCommand = struct { method: std.http.Method, url: []u8, header: []std.http.Header, body: []const u8 };
-
+pub const RequestCommand = struct { method: std.http.Method, url: []u8, header: []std.http.Header, body: ?[]const u8 };
 const CommandTag = enum { Help, Request };
-
 const Command = union(CommandTag) { Help: void, Request: RequestCommand };
 
 pub fn parse_cli_command(allocator: std.mem.Allocator, cmd: CliCommand) Command {
@@ -13,12 +11,12 @@ pub fn parse_cli_command(allocator: std.mem.Allocator, cmd: CliCommand) Command 
         if (std.ascii.eqlIgnoreCase(cmd.cmds[0], "REQUEST")) {
             if (cmd.cmds.len == 3) {
                 const method = get_http_method(cmd.cmds[1]) catch .GET;
-                return .{ .Request = .{ .method = method, .url = cmd.cmds[2], .header = extract_header(allocator, cmd) catch undefined, .body = extract_body(allocator, cmd) catch "" } };
+                return .{ .Request = .{ .method = method, .url = cmd.cmds[2], .header = extract_header(allocator, cmd) catch undefined, .body = extract_body(allocator, cmd) catch null } };
             }
         }
         if (cmd.cmds.len == 2) {
             const method = get_http_method(cmd.cmds[0]) catch .GET;
-            return .{ .Request = .{ .method = method, .url = cmd.cmds[1], .header = extract_header(allocator, cmd) catch undefined, .body = "" } };
+            return .{ .Request = .{ .method = method, .url = cmd.cmds[1], .header = extract_header(allocator, cmd) catch undefined, .body = null } };
         }
     }
     return .{ .Help = {} };
@@ -30,6 +28,10 @@ fn get_http_method(method: []u8) !std.http.Method {
     if (std.ascii.eqlIgnoreCase(method, "DELETE")) return .DELETE;
     if (std.ascii.eqlIgnoreCase(method, "PUT")) return .PUT;
     if (std.ascii.eqlIgnoreCase(method, "PATCH")) return .PATCH;
+    if (std.ascii.eqlIgnoreCase(method, "HEAD")) return .HEAD;
+    if (std.ascii.eqlIgnoreCase(method, "CONNECT")) return .CONNECT;
+    if (std.ascii.eqlIgnoreCase(method, "OPTIONS")) return .OPTIONS;
+    if (std.ascii.eqlIgnoreCase(method, "TRACE")) return .TRACE;
     return error.InvalidMethod;
 }
 
