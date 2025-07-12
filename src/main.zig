@@ -1,6 +1,6 @@
 const std = @import("std");
-const parser = @import("argument_parser.zig");
-const commands = @import("command_parser.zig");
+const parser = @import("parser/argument_parser.zig");
+const commands = @import("parser/command_parser.zig");
 const client = @import("client.zig");
 
 pub fn main() !void {
