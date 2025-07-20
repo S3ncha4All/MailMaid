@@ -1,7 +1,7 @@
 ---
 name: User-Story-Template
 about: Standardvorlage für eine Userstory
-title: Beispiel Story
+title: ''
 labels: enhancement
 assignees: S3ncha4All
 
