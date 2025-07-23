@@ -17,12 +17,13 @@ mm help
 
 ## ToDo
 
-- Complete Inputparameter parsing for URL and HTTP-Methods
-- Add Header-Support
-- Add Body-Support?
+- JSON-File as Workspace
 
 ## Done
 
+- Complete Inputparameter parsing for URL and HTTP-Methods
+- Add Header-Support
+- Add Body-Support?
 - Support all common HTTP-Methods
 - POC Request with GET
 - POC parsing Inputparameter

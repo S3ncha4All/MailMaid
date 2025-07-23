@@ -1,0 +1,36 @@
+{
+  "env": [
+    {
+      "id": 1,
+      "name": "TestENV",
+      "values" : {
+        "env_val1": "val 1",
+        "env_val2": "val 2"
+      }
+    },
+    {
+      "id": 1001,
+      "name": "TestENV01",
+      "values" : {
+        "env_val1": "val 1",
+        "env_val2": "val 2"
+      }
+    }
+  ],
+  "requests": [
+    {
+      "id": 191,
+      "name": "TestREQ",
+      "description": "Description",
+      "method": "get",
+      "url": "test.de",
+      "header": {
+        "h1": "HEADER"
+      },
+      "body": {
+        "type": "text/file",
+        "body": "blubb"
+      }
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "env": [
+    {
+      "id": 1,
+      "name": "Environment 1",
+      "values": {
+        "ev1": "ev1"
+      }
+    }
+  ],
+  "requests": [
+    {
+      "id": 191,
+      "name": "Request 191",
+      "description": "Description",
+      "method": "get",
+      "url": "test.de",
+      "header": {
+        "h1": "Header 1"
+      },
+      "body": {
+        "type": "file",
+        "content": "blubb.txt"
+      }
+    }
+  ]
+}

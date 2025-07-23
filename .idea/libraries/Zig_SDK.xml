@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Zig SDK">
+    <CLASSES />
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$USER_HOME$/AppData/Local/zig/0.15.0-dev.769+4d7980645/lib/std" />
+    </SOURCES>
+  </library>
+</component>
