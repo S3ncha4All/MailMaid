@@ -5,7 +5,7 @@ const CliArgument = struct { argument_type: []u8, argument: []u8 };
 
 pub const CliCmd = struct { cmds: [][]u8, arguments: []CliArgument };
 
-pub fn parse_commandline(allocator: std.mem.Allocator, args: [][:0]u8) !CliCmd {
+pub fn parseCommandLine(allocator: std.mem.Allocator, args: [][:0]u8) !CliCmd {
     var i: usize = 0;
     var cmds = ArrayList([]u8).init(allocator);
     var arguments = ArrayList(CliArgument).init(allocator);

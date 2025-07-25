@@ -3,7 +3,7 @@ const ArrayList = std.ArrayList;
 const http = std.http;
 const commands = @import("parser/command_parser.zig");
 
-pub fn make_request(allocator: std.mem.Allocator, request: commands.RequestCommand) void {
+pub fn makeRequest(allocator: std.mem.Allocator, request: commands.RequestCommand) void {
     var client = http.Client{ .allocator = allocator };
     defer client.deinit();
 

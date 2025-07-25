@@ -8,4 +8,5 @@ See Wiki for further usage
 Here are some conventions, that are set for this project:
 * snake_case for variables
 * camelCase for functions
+* camelCase for structs
 * unit tests are always in the same file of the component, which is under test

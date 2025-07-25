@@ -23,7 +23,7 @@ const json_request = struct {
 
 const json_workspace = struct {env: []json_env, requests: []json_request};
 
-pub fn parse_workspace(allocator:std.mem.Allocator, dir: [] const u8) !json_workspace {
+pub fn parseWorkspace(allocator:std.mem.Allocator, dir: [] const u8) !json_workspace {
     const data = try std.fs.cwd().readFileAlloc(allocator, dir, std.math.maxInt(usize));
     const parsed = try std.json.parseFromSlice(json_workspace, allocator, data, .{});
     return parsed.value;
@@ -32,7 +32,7 @@ pub fn parse_workspace(allocator:std.mem.Allocator, dir: [] const u8) !json_work
 test "test_parse_json_workspace" {
     const allocator = std.heap.page_allocator;
     const test_workspace = "test/test.mm.json";
-    const json = try parse_workspace(allocator, test_workspace);
+    const json = try parseWorkspace(allocator, test_workspace);
     std.debug.print("JSON:\n {}\n", .{json});
     std.debug.print("Key / Value = {any} /  {any}\n", .{
         json.env[0].values.?.object.keys()[0],
