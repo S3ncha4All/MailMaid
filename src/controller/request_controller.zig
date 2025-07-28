@@ -5,10 +5,28 @@ const ArgumentToken = @import("../core/tokenizer.zig").ArgumentToken;
 const Client = @import("../service/client_service.zig");
 
 pub fn handle(allocator: std.mem.Allocator, request: Request, arguments: []ArgumentToken) void {
-    std.debug.print("Manage manageRequestCommand", .{});
+    std.debug.print("Handle Request\n", .{});
+    const response = switch (request.method) {
+        .POST, .PUT, .PATCH => handleBodyless(allocator, request, arguments),
+        else => handleBodyless(allocator, request, arguments),
+    };
+    if (response) |r| {
+        std.debug.print("Response. {any}\n", .{r.meta});
+        std.debug.print("Content: {s}", .{r.content});
+    } else |e| {
+        std.debug.print("ERROR\n {}", .{e});
+    }
+}
+
+fn handleBodyless(allocator: std.mem.Allocator, request: Request, arguments: []ArgumentToken) !Client.Response {
+    const header = extractHeader(allocator, arguments) catch undefined;
+    return Client.makeRequest(allocator, .{ .method = request.method, .url = request.url, .header = header, .body = null });
+}
+
+fn handleWithBody(allocator: std.mem.Allocator, request: Request, arguments: []ArgumentToken) !Client.Response {
     const header = extractHeader(allocator, arguments) catch undefined;
     const body = extractBody(allocator, arguments) catch "";
-    Client.makeRequest(allocator, .{ .method = request.method, .url = request.url, .header = header, .body = body });
+    return Client.makeRequest(allocator, .{ .method = request.method, .url = request.url, .header = header, .body = body });
 }
 
 fn extractHeader(allocator: std.mem.Allocator, arguments: []ArgumentToken) ![]std.http.Header {
