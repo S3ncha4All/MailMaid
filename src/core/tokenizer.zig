@@ -1,14 +1,13 @@
 const std = @import("std");
 const ArrayList = std.ArrayList;
 
-const CliArgument = struct { argument_type: []u8, argument: []u8 };
+pub const ArgumentToken = struct { argument_type: []u8, argument: []u8 };
+pub const Tokens = struct { cmds: [][]u8, arguments: []ArgumentToken };
 
-pub const CliCmd = struct { cmds: [][]u8, arguments: []CliArgument };
-
-pub fn parseCommandLine(allocator: std.mem.Allocator, args: [][:0]u8) !CliCmd {
+pub fn parseCommandLine(allocator: std.mem.Allocator, args: [][:0]u8) !Tokens {
     var i: usize = 0;
     var cmds = ArrayList([]u8).init(allocator);
-    var arguments = ArrayList(CliArgument).init(allocator);
+    var arguments = ArrayList(ArgumentToken).init(allocator);
     while (i < args.len) : (i += 1) {
         if (std.mem.startsWith(u8, args[i], "--")) {
             //Argument

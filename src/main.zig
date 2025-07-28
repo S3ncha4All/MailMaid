@@ -1,7 +1,7 @@
 const std = @import("std");
-const parser = @import("parser/argument_parser.zig");
-const commands = @import("parser/command_parser.zig");
-const client = @import("client.zig");
+const Tokenizer = @import("core/tokenizer.zig");
+const Router = @import("core/router.zig");
+const RequestController = @import("controller/request_controller.zig");
 
 pub fn main() !void {
     std.debug.print("Run MailMaid\n", .{});
@@ -11,11 +11,23 @@ pub fn main() !void {
     const allocator = arena.allocator();
     const args = try std.process.argsAlloc(allocator);
 
-    const cli_command = try parser.parse_commandline(allocator, args[1..]);
-    const command = commands.parse_cli_command(allocator, cli_command);
-    switch (command) {
+    const tokens = try Tokenizer.parseCommandLine(allocator, args[1..]);
+    const route = Router.createRoute(tokens);
+    switch (route) {
         .Request => |request| {
-            client.make_request(allocator, request);
+            RequestController.handle(request, tokens.arguments);
+        },
+        .Init => {
+            std.debug.print("initialize workspace", .{});
+        },
+        .Collection => |_| {
+            std.debug.print("Collection command", .{});
+        },
+        .Environment => |_| {
+            std.debug.print("Environment command", .{});
+        },
+        .History => |_| {
+            std.debug.print("History command", .{});
         },
         .Help => std.debug.print("HELP\n", .{}),
     }
