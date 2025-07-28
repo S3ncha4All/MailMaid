@@ -1,11 +1,12 @@
 const std = @import("std");
 const ArrayList = std.ArrayList;
+const Logger = @import("../util/logger.zig");
 const Request = @import("../core/router.zig").Request;
-const ArgumentToken = @import("../core/tokenizer.zig").ArgumentToken;
 const Client = @import("../service/client_service.zig");
+const ArgumentToken = @import("../core/tokenizer.zig").ArgumentToken;
 
 pub fn handle(allocator: std.mem.Allocator, request: Request, arguments: []ArgumentToken) void {
-    std.debug.print("Handle Request\n", .{});
+    Logger.log("Handle Request\n", .{});
     const response = switch (request.method) {
         .POST, .PUT, .PATCH => handleBodyless(allocator, request, arguments),
         else => handleBodyless(allocator, request, arguments),

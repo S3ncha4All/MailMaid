@@ -1,10 +1,11 @@
 const std = @import("std");
-const Tokenizer = @import("core/tokenizer.zig");
+const Logger = @import("util/logger.zig");
 const Router = @import("core/router.zig");
+const Tokenizer = @import("core/tokenizer.zig");
 const RequestController = @import("controller/request_controller.zig");
 
 pub fn main() !void {
-    std.debug.print("Run MailMaid\n", .{});
+    Logger.log("Run MailMaid\n", .{});
 
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     defer arena.deinit();
