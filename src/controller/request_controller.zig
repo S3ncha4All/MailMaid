@@ -1,6 +1,7 @@
 const std = @import("std");
 const ArrayList = std.ArrayList;
 const Logger = @import("../util/logger.zig");
+const Printer = @import("../util/printer.zig");
 const Request = @import("../core/router.zig").Request;
 const Client = @import("../service/client_service.zig");
 const ArgumentToken = @import("../core/tokenizer.zig").ArgumentToken;
@@ -12,10 +13,10 @@ pub fn handle(allocator: std.mem.Allocator, request: Request, arguments: []Argum
         else => handleBodyless(allocator, request, arguments),
     };
     if (response) |r| {
-        std.debug.print("Response. {any}\n", .{r.meta});
-        std.debug.print("Content: {s}", .{r.content});
+        Printer.print("Response. {any}\n", .{r.meta});
+        Printer.print("Content: {s}", .{r.content});
     } else |e| {
-        std.debug.print("ERROR\n {}", .{e});
+        Logger.log("ERROR\n {}", .{e});
     }
 }
 
