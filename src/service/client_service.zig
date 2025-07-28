@@ -1,9 +1,10 @@
 const std = @import("std");
 const ArrayList = std.ArrayList;
 const http = std.http;
-const commands = @import("parser/command_parser.zig");
 
-pub fn makeRequest(allocator: std.mem.Allocator, request: commands.RequestCommand) void {
+pub const RequestCommand = struct { method: std.http.Method, url: []u8, header: []std.http.Header, body: ?[]const u8 };
+
+pub fn makeRequest(allocator: std.mem.Allocator, request: RequestCommand) void {
     var client = http.Client{ .allocator = allocator };
     defer client.deinit();
 

@@ -15,7 +15,7 @@ pub fn main() !void {
     const route = Router.createRoute(tokens);
     switch (route) {
         .Request => |request| {
-            RequestController.handle(request, tokens.arguments);
+            RequestController.handle(allocator, request, tokens.arguments);
         },
         .Init => {
             std.debug.print("initialize workspace", .{});
