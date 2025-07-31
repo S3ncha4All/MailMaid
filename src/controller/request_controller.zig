@@ -2,21 +2,23 @@ const std = @import("std");
 const ArrayList = std.ArrayList;
 const Logger = @import("../util/logger.zig");
 const Printer = @import("../util/printer.zig");
+const fileUtil = @import("../util/file_util.zig");
 const Request = @import("../core/router.zig").Request;
 const Client = @import("../service/client_service.zig");
 const ArgumentToken = @import("../core/tokenizer.zig").ArgumentToken;
 
-pub fn handle(allocator: std.mem.Allocator, request: Request, arguments: []ArgumentToken) void {
-    Logger.log("Handle Request\n", .{});
+pub fn handle(allocator: std.mem.Allocator, request: Request, arguments: []ArgumentToken) !void {
+    Logger.log("Handle Request", .{});
     const response = switch (request.method) {
-        .POST, .PUT, .PATCH => handleBodyless(allocator, request, arguments),
+        .POST, .PUT, .PATCH => handleWithBody(allocator, request, arguments),
         else => handleBodyless(allocator, request, arguments),
     };
     if (response) |r| {
         Printer.print("Response. {any}\n", .{r.meta});
         Printer.print("Content: {s}", .{r.content});
     } else |e| {
-        Logger.log("ERROR\n {}", .{e});
+        Logger.log("Error while handling Request: {}", .{e});
+        return e;
     }
 }
 
@@ -27,7 +29,7 @@ fn handleBodyless(allocator: std.mem.Allocator, request: Request, arguments: []A
 
 fn handleWithBody(allocator: std.mem.Allocator, request: Request, arguments: []ArgumentToken) !Client.Response {
     const header = extractHeader(allocator, arguments) catch undefined;
-    const body = extractBody(allocator, arguments) catch "";
+    const body = try extractBody(allocator, arguments);
     return Client.makeRequest(allocator, .{ .method = request.method, .url = request.url, .header = header, .body = body });
 }
 
@@ -47,11 +49,19 @@ fn extractHeader(allocator: std.mem.Allocator, arguments: []ArgumentToken) ![]st
 }
 
 fn extractBody(allocator: std.mem.Allocator, arguments: []ArgumentToken) ![]u8 {
-    var body = ArrayList(u8).init(allocator);
+    var body: []u8 = "";
     for (arguments) |arg| {
         if (std.ascii.eqlIgnoreCase(arg.argument_type, "B") or std.ascii.eqlIgnoreCase(arg.argument_type, "BODY")) {
-            try body.appendSlice(arg.argument);
+            body = arg.argument;
+        }
+        if (std.ascii.eqlIgnoreCase(arg.argument_type, "BF") or std.ascii.eqlIgnoreCase(arg.argument_type, "BODY-FILE")) {
+            body = try extractBodyFromFile(allocator, arg.argument);
         }
     }
-    return body.toOwnedSlice();
+    return body;
+}
+
+fn extractBodyFromFile(allocator: std.mem.Allocator, path: []u8) ![]u8 {
+    const data = try fileUtil.readCompleteFile(allocator, path);
+    return data;
 }

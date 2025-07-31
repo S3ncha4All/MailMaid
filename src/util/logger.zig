@@ -1,5 +1,6 @@
 const std = @import("std");
 
 pub fn log(comptime text: []const u8, args: anytype) void {
-    std.debug.print(text, args);
+    const logText = "LOG DATE - " ++ text ++ "\n";
+    std.debug.print(logText, args);
 }

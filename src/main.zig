@@ -4,6 +4,7 @@ const Router = @import("core/router.zig");
 const Printer = @import("util/printer.zig");
 const Tokenizer = @import("core/tokenizer.zig");
 const RequestController = @import("controller/request_controller.zig");
+const ErrorController = @import("controller/error_controller.zig");
 
 pub fn main() !void {
     Printer.print("Run MailMaid\n", .{});
@@ -15,9 +16,15 @@ pub fn main() !void {
 
     const tokens = try Tokenizer.parseCommandLine(allocator, args[1..]);
     const route = Router.createRoute(tokens);
+    process(allocator, route, tokens) catch |err| {
+        ErrorController.handle(err);
+    };
+}
+
+fn process(allocator: std.mem.Allocator, route: Router.Command, tokens: Tokenizer.Tokens) !void {
     switch (route) {
         .Request => |request| {
-            RequestController.handle(allocator, request, tokens.arguments);
+            try RequestController.handle(allocator, request, tokens.arguments);
         },
         .Init => {
             std.debug.print("initialize workspace", .{});

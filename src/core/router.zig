@@ -7,7 +7,7 @@ const CommandTag = enum { Help, Request, Init, Collection, History, Environment 
 
 pub const Generic = struct { verb: CommandVerb };
 pub const Request = struct { method: std.http.Method, url: []u8 };
-const Command = union(CommandTag) { Help: void, Request: Request, Init: void, Collection: Generic, History: Generic, Environment: Generic };
+pub const Command = union(CommandTag) { Help: void, Request: Request, Init: void, Collection: Generic, History: Generic, Environment: Generic };
 
 pub fn createRoute(cmd: Tokens) Command {
     if (cmd.cmds.len > 0) {
@@ -42,15 +42,15 @@ pub fn createRoute(cmd: Tokens) Command {
 
 fn getCommandVerb(cmd: [][]u8) !CommandVerb {
     if (cmd.len >= 2) {
-        if (std.ascii.eqlIgnoreCase(cmd[1], "Create")) return .Create;
-        if (std.ascii.eqlIgnoreCase(cmd[1], "List")) return .List;
-        if (std.ascii.eqlIgnoreCase(cmd[1], "Collect")) return .Collect;
-        if (std.ascii.eqlIgnoreCase(cmd[1], "Set")) return .Set;
-        if (std.ascii.eqlIgnoreCase(cmd[1], "Remove")) return .Remove;
-        if (std.ascii.eqlIgnoreCase(cmd[1], "Activate")) return .Activate;
-        if (std.ascii.eqlIgnoreCase(cmd[1], "Import")) return .Import;
-        if (std.ascii.eqlIgnoreCase(cmd[1], "Delete")) return .Delete;
-        if (std.ascii.eqlIgnoreCase(cmd[1], "Add")) return .Add;
+        if (std.ascii.eqlIgnoreCase(cmd[1], "CREATE")) return .Create;
+        if (std.ascii.eqlIgnoreCase(cmd[1], "LIST")) return .List;
+        if (std.ascii.eqlIgnoreCase(cmd[1], "COLLECT")) return .Collect;
+        if (std.ascii.eqlIgnoreCase(cmd[1], "SET")) return .Set;
+        if (std.ascii.eqlIgnoreCase(cmd[1], "REMOVE")) return .Remove;
+        if (std.ascii.eqlIgnoreCase(cmd[1], "ACTIVATE")) return .Activate;
+        if (std.ascii.eqlIgnoreCase(cmd[1], "IMPORT")) return .Import;
+        if (std.ascii.eqlIgnoreCase(cmd[1], "DELETE")) return .Delete;
+        if (std.ascii.eqlIgnoreCase(cmd[1], "ADD")) return .Add;
     }
     return error.InvalidCommandVerb;
 }
