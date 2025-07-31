@@ -1,3 +1,6 @@
 #Ignore Cache and Buildfiles
 .zig-cache
 zig-out
+
+#Ignore Testfolder
+test/*
