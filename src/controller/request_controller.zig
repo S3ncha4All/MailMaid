@@ -7,19 +7,30 @@ const Request = @import("../core/router.zig").Request;
 const Client = @import("../service/client_service.zig");
 const ArgumentToken = @import("../core/tokenizer.zig").ArgumentToken;
 
-pub fn handle(allocator: std.mem.Allocator, request: Request, arguments: []ArgumentToken) !void {
+pub fn handle(allocator: std.mem.Allocator, request: Request, modifier: [][]u8, arguments: []ArgumentToken) !void {
     Logger.log("Handle Request", .{});
     const response = switch (request.method) {
         .POST, .PUT, .PATCH => handleWithBody(allocator, request, arguments),
         else => handleBodyless(allocator, request, arguments),
     };
     if (response) |r| {
-        Printer.print("Response. {any}\n", .{r.meta});
-        Printer.print("Content: {s}", .{r.content});
+        if (!isSilent(modifier)) {
+            Printer.print("Response. {any}\n", .{r.meta});
+            Printer.print("Content: {s}", .{r.content});
+        }
     } else |e| {
         Logger.log("Error while handling Request: {}", .{e});
         return e;
     }
+}
+
+fn isSilent(modifier: [][]u8) bool {
+    for (modifier) |mod| {
+        if (std.ascii.eqlIgnoreCase(mod, "S") or std.ascii.eqlIgnoreCase(mod, "SILENT")) {
+            return true;
+        }
+    }
+    return false;
 }
 
 fn handleBodyless(allocator: std.mem.Allocator, request: Request, arguments: []ArgumentToken) !Client.Response {

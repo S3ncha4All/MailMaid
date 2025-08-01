@@ -24,7 +24,7 @@ pub fn main() !void {
 fn process(allocator: std.mem.Allocator, route: Router.Command, tokens: Tokenizer.Tokens) !void {
     switch (route) {
         .Request => |request| {
-            try RequestController.handle(allocator, request, tokens.arguments);
+            try RequestController.handle(allocator, request, tokens.modifier, tokens.arguments);
         },
         .Init => {
             std.debug.print("initialize workspace", .{});
