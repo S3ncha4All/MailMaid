@@ -1,5 +1,6 @@
 const std = @import("std");
+const StdOut = std.io.getStdOut();
 
 pub fn print(comptime text: []const u8, args: anytype) void {
-    std.debug.print(text, args);
+    StdOut.writer().print(text, args) catch {};
 }
