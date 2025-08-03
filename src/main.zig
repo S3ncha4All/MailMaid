@@ -4,6 +4,8 @@ const Router = @import("core/router.zig");
 const Printer = @import("util/printer.zig");
 const Tokenizer = @import("core/tokenizer.zig");
 const RequestController = @import("controller/request_controller.zig");
+const InitController = @import("controller/init_controller.zig");
+const CollectionController = @import("controller/collection_controller.zig");
 const ErrorController = @import("controller/error_controller.zig");
 
 pub fn main() !void {
@@ -27,10 +29,10 @@ fn process(allocator: std.mem.Allocator, route: Router.Command, tokens: Tokenize
             try RequestController.handle(allocator, request, tokens.modifier, tokens.arguments);
         },
         .Init => {
-            std.debug.print("initialize workspace", .{});
+            try InitController.handle();
         },
-        .Collection => |_| {
-            std.debug.print("Collection command", .{});
+        .Collection => |generic| {
+            try CollectionController.handle(allocator, generic, tokens.modifier, tokens.arguments);
         },
         .Environment => |_| {
             std.debug.print("Environment command", .{});

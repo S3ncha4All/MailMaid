@@ -23,11 +23,11 @@ pub fn createRoute(cmd: Tokens) Command {
         }
         if (std.ascii.eqlIgnoreCase(cmd.cmds[0], "HISTORY")) {
             const verb = getCommandVerb(cmd.cmds) catch .Help;
-            return .{ .Collection = .{ .verb = verb } };
+            return .{ .History = .{ .verb = verb } };
         }
         if (std.ascii.eqlIgnoreCase(cmd.cmds[0], "ENVIRONMENT")) {
             const verb = getCommandVerb(cmd.cmds) catch .Help;
-            return .{ .Collection = .{ .verb = verb } };
+            return .{ .Environment = .{ .verb = verb } };
         }
         if (std.ascii.endsWithIgnoreCase(cmd.cmds[0], "INIT")) {
             return .{ .Init = {} };
