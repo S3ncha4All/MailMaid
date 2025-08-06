@@ -1,3 +1,5 @@
+![MailMaid](doc/logo.jpeg)
+
 # MailMaid
 A OpenSource CLI Tool for http-Requests
 
